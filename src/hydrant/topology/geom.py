@@ -284,7 +284,7 @@ def prepare_riv(
     return river
 
 
-def intersect_topologyy(
+def intersect_topology(
     cat: gpd.GeoDataFrame,
     cat_cols: Dict[str, str],
     riv: gpd.GeoDataFrame,
@@ -378,7 +378,7 @@ def flag_ncaalg(
     hydrological polygons in a GeoDataFrame that intersect with non-contributing area polygons
     beyond a specified threshold percentage. This enhancement uses spatial indexing for optimized
     performance, significantly reducing computation time for large datasets. The function adds
-    an "iwf" column to the primary GeoDataFrame, initially marking all polygons with a value of 1.
+    an "ncontr" column to the primary GeoDataFrame, initially marking all polygons with a value of 1.
     Polygons representing non-contributing areas that meet the intersection threshold are then
     updated to a value of 2. This update facilitates the distinction of critical hydrological features
     based on their spatial relationship with non-contributing zones, enabling more nuanced environmental
@@ -398,10 +398,10 @@ def flag_ncaalg(
     Returns
     -------
     gpd.GeoDataFrame
-        The modified GeoDataFrame of the first GeoDataFrame with the 'iwf' column added.
+        The modified GeoDataFrame of the first GeoDataFrame with the 'ncontr' column added.
     """
-    # Initialize the 'iwf' column to 1 for all rows in gdf1 as default
-    gdf1['iwf'] = 1
+    # Initialize the 'ncontr' column to 1 for all rows in gdf1 as default
+    gdf1['ncontr'] = 1
     
     # Create spatial index for gdf2
     spatial_index = gdf2.sindex
@@ -422,7 +422,7 @@ def flag_ncaalg(
             intersection_area = row['geometry'].intersection(match['geometry']).area
             area_fraction = intersection_area / row['geometry'].area
             if area_fraction > threshold:
-                gdf1.at[index, 'iwf'] = 2  # Update 'iwf' to 2 for significant intersections
+                gdf1.at[index, 'ncontr'] = 2  # Update 'ncontr' to 2 for significant intersections
                 break  # Break after finding the first significant intersection
                 
     # Save the modified gdf1 to a new shapefile if an output path is provided
