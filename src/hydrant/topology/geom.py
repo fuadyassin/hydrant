@@ -365,7 +365,7 @@ def intersect_topology(
     return cat_clipped, riv_clipped
     
 
-def assign_intersection_flag_gdf_sindex(
+def flag_ncaalg(
     gdf1: gpd.GeoDataFrame,
     gdf2: gpd.GeoDataFrame,
     threshold: float = 0.1,  # Threshold set to 10% by default
@@ -385,7 +385,6 @@ def assign_intersection_flag_gdf_sindex(
     and hydrological analyses.
 
     Parameters
-    ----------
     gdf1 : gpd.GeoDataFrame
         The first GeoDataFrame.
     gdf2 : gpd.GeoDataFrame
@@ -425,7 +424,7 @@ def assign_intersection_flag_gdf_sindex(
             if area_fraction > threshold:
                 gdf1.at[index, 'iwf'] = 2  # Update 'iwf' to 2 for significant intersections
                 break  # Break after finding the first significant intersection
-    
+                
     # Save the modified gdf1 to a new shapefile if an output path is provided
     if output_path is not None:
         gdf1.to_file(output_path)
